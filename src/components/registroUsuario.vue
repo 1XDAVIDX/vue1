@@ -7,7 +7,7 @@ import { ref } from 'vue';
 export default {
     setup() {
         const usuario = ref({
-            id_usuario:"",
+            idUsuario:"",
             nombre: "",
             email: "",
             contraseña: "",
@@ -18,7 +18,7 @@ export default {
 
         const insertarUsuario = async () => {
             try {
-                const respuesta = await axios.post('http://127.0.0.1:8000/insertar/usuario', usuario.value);
+                const respuesta = await axios.post('http://localhost:8080/usuario/insertar/usuario', usuario.value);
                 message.value = respuesta.data.message;
                 message.value = Swal.fire({
                     icon:'success',

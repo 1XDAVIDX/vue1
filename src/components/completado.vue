@@ -4,41 +4,50 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-export default{
-    setup(){
+export default {
+    setup() {
         const verificar = ref({
-            id_compra:0,
-            id_usuario:""
-        })
-        const factura = ref({})
-        const pedidoHecho = async () =>{
+            idCompra: 0,
+            idUsuario: ""
+        });
+        const factura = ref({});
+        
+        const pedidoHecho = async () => {
             try {
-                const respuesta =await axios.delete("http://127.0.0.1:8000/completada/"+verificar.value.id_compra+"/"+verificar.value.id_usuario);
-                factura.value = respuesta.data
-                console.log("ok",factura.value)
+                // Cambiar la URL a la del servidor Spring Boot
+                const respuesta = await axios.delete(`http://localhost:8080/compra/compra/completada/${verificar.value.idCompra}/${verificar.value.idUsuario}`);
+                
+                // Asignar la respuesta a la variable factura
+                factura.value = respuesta.data;
+                
+                // Mostrar la alerta con los detalles de la compra
                 Swal.fire({
-                    icon:"success",
-                    title:"Pedido Hecho",
-                    text:`Producto: ${factura.value.id_producto} Cantidad:${factura.value.cantidad} Total:${factura.value.total}\nID compra:${factura.value.id_compra} ID Usuario:${factura.value.id_usuario} Nombre:${factura.value.nombre} Correo:${factura.value.email}`
-                })
-
+                    icon: "success",
+                    title: "Pedido Completado",
+                    text: `Producto: ${factura.value.idProducto} Cantidad: ${factura.value.cantidad} Total: ${factura.value.total}\nID compra: ${factura.value.idCompra} ID Usuario: ${factura.value.idUsuario} Nombre: ${factura.value.nombre} Correo: ${factura.value.email}`
+                });
             } catch (error) {
+                // Si ocurre un error, mostrar la alerta de error
                 Swal.fire({
-                    icon:"error",
-                    title:"Datos no son correctos"
-                })
+                    icon: "error",
+                    title: "Error",
+                    text: "Datos no son correctos o ocurrió un problema con la eliminación de la compra"
+                });
             }
-        }
-        const router = useRouter()
-        return{
+        };
+        
+        const router = useRouter();
+        
+        return {
             verificar,
             pedidoHecho,
             factura,
             router
-        }
+        };
     }
-}
+};
 </script>
+
 <template>
     <form @submit.prevent="pedidoHecho" class="formulario">
         <div id="tituloheader">
@@ -46,10 +55,10 @@ export default{
             <button type="button" @click="router.go(-1)" id="x">X</button>
         </div>
         <label class="respuesta">ID Compra:
-            <input v-model="verificar.id_compra" type="number" required>
+            <input v-model="verificar.idCompra" type="number" required>
         </label>
         <label class="respuesta">ID Usuario:
-            <input v-model="verificar.id_usuario" type="text" required>
+            <input v-model="verificar.idUsuario" type="text" required>
         </label>
         <button type="submit" class="boton">Completado</button>
     </form>
@@ -125,4 +134,3 @@ export default{
     background-color: #0056b3; /* Color de fondo al pasar el mouse */
 }
 </style>
-

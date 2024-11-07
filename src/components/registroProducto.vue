@@ -7,7 +7,7 @@ import { ref } from 'vue';
 export default {
     setup() {
         const producto = ref({
-            id_producto:"",
+            idProducto:"",
             nombre: "",
             descripcion: "",
             precio: 0,
@@ -18,7 +18,7 @@ export default {
 
         const insertarProducto = async () => {
             try {
-                const respuesta = await axios.post('http://127.0.0.1:8000/insertar/producto', producto.value);
+                const respuesta = await axios.post('http://localhost:8080/producto/registrar', producto.value);
                 message.value = respuesta.data.message;
                 message.value = Swal.fire({
                     icon: "success",
@@ -63,7 +63,7 @@ export default {
         <button type="button" @click="router.go(-1)"  id="x">X</button>
         </div>
         <label class="respuesta">ID Producto:
-            <input v-model="producto.id_producto" type="text" required>
+            <input v-model="producto.idProducto" type="text" required>
         </label>
         <label class="respuesta">Nombre:
             <input v-model="producto.nombre" type="text" required>

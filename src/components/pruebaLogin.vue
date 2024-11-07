@@ -11,41 +11,54 @@ export default {
             router.push({name:"registroUsuario"})
         }
         const login = ref({
-            id_usuario:"",
+            idUsuario:"",
             contraseña: "",
-            rol:""
+            
         });
         const message = ref('');
         const mirar = ref({});
         
         
-        const insertarlogin = async () => {
+                const insertarlogin = async () => {
+            if (!login.value.idUsuario || !login.value.contraseña) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Campos vacíos',
+                    text: 'Por favor, completa todos los campos'
+                });
+                return;
+            }
+
             try {
-                const respuesta = await axios.post('http://127.0.0.1:8000/login', login.value);
+                const respuesta = await axios.post('http://localhost:8080/usuario/login', null, {
+                    params: {
+                        id_usuario: login.value.idUsuario,
+                        contraseña: login.value.contraseña
+                    }
+                });
                 
+
                 message.value = respuesta.data.message;
                 mirar.value = respuesta.data.rol;
                 
-                message.value = Swal.fire({
-                    icon:'success',
-                    title:'Inicio de sesión exitoso',
-                    text:'Bienvenido a tu cuenta'
-                
-                    });
-                if (mirar.value=="admin") {
-                    router.replace({name:"admin"})
-                }else if(mirar.value=="cliente"){
-                    router.replace({name:"cliente"})
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Inicio de sesión exitoso',
+                    text: 'Bienvenido a tu cuenta'
+                });
+                console.log("rol:", message.value)
+                if (mirar.value === "admin") {
+                    router.replace({ name: "admin" });
+                } else if (mirar.value === "cliente") {
+                    router.replace({ name: "cliente" });
                 }
-                
             } catch (error) {
                 console.error("Error al registrar datos", error);
-                message.value = Swal.fire({
-                        icon:'error',
-                        title:'Error de iniciode sesion',
-                        text:'Usuario No Existe' 
-
-                    });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de inicio de sesión',
+                    text: 'Usuario No Existe'
+                });
             }
         };
         const router = useRouter();
@@ -67,7 +80,7 @@ export default {
         <button type="button" @click="()=>router.go(-1)"  id="x">X</button>
         </div>
         <label class="respuesta">ID usuario:
-            <input v-model="login.id_usuario" type="text" required>
+            <input v-model="login.idUsuario" type="text" required>
         </label>
         
         <label class="respuesta">Contraseña:
@@ -92,7 +105,7 @@ export default {
 .formulario {
     
     position: fixed; 
-    top: 20%; 
+    top: 10%; 
     width: 20%;
     left: 50%; 
     transform: translateX(-50%); 

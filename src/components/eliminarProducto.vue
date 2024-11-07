@@ -8,13 +8,13 @@ import { ref } from 'vue';
 export default {
     setup(){
         const iD_eliminador = ref({
-            id_producto :""
+            idProducto :""
         })
         const message = ref('');
 
         const eliminarProducto = async () =>{
             try {
-                const respuesta =await axios.delete('http://127.0.0.1:8000/eliminar/' + iD_eliminador.value.id_producto);
+                const respuesta =await axios.delete('http://localhost:8080/producto/eliminar/' + iD_eliminador.value.idProducto);
                 message.value = respuesta.data.message
                 message.value = Swal.fire({
                     icon:"success",
@@ -51,7 +51,7 @@ export default {
         <button type="button" @click="()=>router.go(-1)"  id="x">X</button>
         </div>
         <label class="respuesta">ID Producto:
-            <input v-model="iD_eliminador.id_producto" type="text" required>
+            <input v-model="iD_eliminador.idProducto" type="text" required>
         </label>
         <button type="submit" class="boton">Enviar</button>
 
@@ -73,7 +73,7 @@ export default {
 .formulario {
     
     position: fixed; 
-    top: 20%; 
+    top: 10%; 
     width: 20%;
     left: 50%; 
     transform: translateX(-50%); 
